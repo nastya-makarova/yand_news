@@ -1,5 +1,8 @@
 import pytest
 
+from datetime import datetime, timedelta
+
+from django.conf import settings
 from django.test.client import Client
 
 from news.models import Comment, News
@@ -57,9 +60,27 @@ def comment(news, author):
 
 @pytest.fixture
 def news_id_for_args(news):
+    """Фикстура возвращает id новости."""
     return (news.id,)
 
 
 @pytest.fixture
 def comment_id_for_args(comment):
+    """Фикстура возвращает id комментария."""
     return (comment.id,)
+
+
+@pytest.fixture
+def all_news():
+    """Фикстура возвращает объекты новостей для главной страницы."""
+    today = datetime.today()
+    all_news = [
+        News(
+            title=f'Новость {index}',
+            text='Просто текст.',
+            date=today - timedelta(days=index)
+        )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    ]
+    News.objects.bulk_create(all_news)
+    return News.objects.bulk_create(all_news)
