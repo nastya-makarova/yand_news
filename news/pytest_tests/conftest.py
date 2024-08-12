@@ -4,8 +4,13 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.test.client import Client
+from django.urls import reverse
+from django.utils import timezone
 
 from news.models import Comment, News
+
+
+COMMENT_COUNT = 10
 
 
 @pytest.fixture
@@ -65,6 +70,12 @@ def news_id_for_args(news):
 
 
 @pytest.fixture
+def get_news_detail_page(news):
+    """Фикстура возвращает страницу новости."""
+    return reverse('news:detail', args=(news.id,))
+
+
+@pytest.fixture
 def comment_id_for_args(comment):
     """Фикстура возвращает id комментария."""
     return (comment.id,)
@@ -84,3 +95,16 @@ def all_news():
     ]
     News.objects.bulk_create(all_news)
     return News.objects.bulk_create(all_news)
+
+
+@pytest.fixture
+def all_comments(news, author):
+    """Фикстура возвращает объекты комментариев для страницы новвости."""
+    now = timezone.now()
+    for index in range(COMMENT_COUNT):
+        comment = Comment.objects.create(
+            news=news, author=author, text=f'Текст {index}'
+        )
+        comment.created = now + timedelta(days=index)
+        comment.save()
+
