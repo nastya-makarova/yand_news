@@ -105,3 +105,4 @@ class TestDetailPage(TestCase):
         self.assertIn('form', response.context)
         # Проверим, что объект формы соответствует нужному классу формы.
         self.assertIsInstance(response.context['form'], CommentForm)
+
