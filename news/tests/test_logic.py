@@ -71,8 +71,7 @@ class TestCommentCreation(TestCase):
         comments_count = Comment.objects.count()
         self.assertEqual(comments_count, 0)
 
-# news/tests/test_logic.py
-...
+
 class TestCommentEditDelete(TestCase):
     # Тексты для комментариев не нужно дополнительно создавать 
     # (в отличие от объектов в БД), им не нужны ссылки на self или cls, 

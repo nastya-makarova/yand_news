@@ -11,6 +11,7 @@ from news.models import Comment, News
 
 
 COMMENT_COUNT = 10
+COMMENT_TEXT = 'Текст комментария'
 
 
 @pytest.fixture
@@ -58,7 +59,7 @@ def comment(news, author):
     comment = Comment.objects.create(
         news=news,
         author=author,
-        text='Текст комментария'
+        text='Текст'
     )
     return comment
 
@@ -108,3 +109,14 @@ def all_comments(news, author):
         comment.created = now + timedelta(days=index)
         comment.save()
 
+
+@pytest.fixture
+def form_data():
+    """Фикстура возвращает словарь модели Comment"""
+    return {'text': COMMENT_TEXT}
+
+
+@pytest.fixture
+def get_url_to_comments(get_news_detail_page):
+    """Фикстура возвращает адрес блока с комментариями."""
+    return get_news_detail_page + '#comments'
