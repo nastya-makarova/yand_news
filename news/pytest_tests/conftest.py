@@ -36,7 +36,7 @@ def author_client(author):
 
 @pytest.fixture
 def not_author_client(not_author):
-    """Фикстура возвращает клиента, авторизованного 
+    """Фикстура возвращает клиента, авторизованного
     для обычного пользователя не автора.
     """
     client = Client()
