@@ -6,8 +6,6 @@ from django.urls import reverse
 from pytest_django.asserts import assertRedirects
 
 
-#pytestmark = pytest.mark.django_db
-
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'name, args',
@@ -22,7 +20,7 @@ from pytest_django.asserts import assertRedirects
 def test_pages_availability_for_anonymous_user(client, name, args):
     """Метод проверяет, что доступность анонимному пользователю главной
     страницы, страницы отдельной нововсти, cтраниц регистрации пользователей,
-    входа в учётную запись и выхода) .
+    входа в учётную запись и выхода).
     """
     url = reverse(name, args=args)
     response = client.get(url)
@@ -46,6 +44,10 @@ def test_pages_availability_for_anonymous_user(client, name, args):
 def test_availability_for_comment_edit_and_delete(
     parametrized_client, expected_status, name, args
 ):
+    """Метод проверяет, что страницы удаления и редактирования
+    комментария доступны автору комментария и не доступны для
+    другого пользователя.
+    """
     url = reverse(name, args=args)
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
@@ -60,6 +62,10 @@ def test_availability_for_comment_edit_and_delete(
     )
 )
 def test_redirect_for_anonymous_client(client, name, args):
+    """Метод проверяет, что при попытке перейти на страницу редактирования
+    или удаления комментария анонимный пользователь перенаправляется на
+    страницу авторизации.
+    """
     login_url = reverse('users:login')
     url = reverse(name, args=args)
     redirect_url = f'{login_url}?next={url}'
